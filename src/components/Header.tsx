@@ -3,6 +3,7 @@ import { ShoppingCart, Menu, Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CartSidebar } from "./CartSidebar";
+import { Link } from "react-router-dom";
 
 export function Header() {
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -14,20 +15,20 @@ export function Header() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <div className="flex items-center space-x-2">
+            <Link to="/" className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-gradient-hero rounded-full flex items-center justify-center">
                 <span className="text-white font-bold text-lg">🌱</span>
               </div>
               <span className="text-xl font-bold text-foreground">FarmFresh</span>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Home</a>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Products</a>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Categories</a>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">About</a>
-              <a href="#" className="text-foreground hover:text-primary transition-colors">Contact</a>
+              <Link to="/" className="text-foreground hover:text-primary transition-colors">Home</Link>
+              <Link to="/products" className="text-foreground hover:text-primary transition-colors">Products</Link>
+              <Link to="/categories" className="text-foreground hover:text-primary transition-colors">Categories</Link>
+              <Link to="/about" className="text-foreground hover:text-primary transition-colors">About</Link>
+              <Link to="/contact" className="text-foreground hover:text-primary transition-colors">Contact</Link>
             </nav>
 
             {/* Search Bar - Desktop */}
@@ -53,19 +54,22 @@ export function Header() {
               </Button>
 
               {/* Cart */}
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="relative"
-                onClick={() => setIsCartOpen(true)}
-              >
-                <ShoppingCart className="w-5 h-5" />
-                {cartItems > 0 && (
-                  <Badge className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center p-0 bg-farm-orange text-white text-xs">
-                    {cartItems}
-                  </Badge>
-                )}
-              </Button>
+              <div className="relative">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="relative"
+                  onClick={() => setIsCartOpen(true)}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  {cartItems > 0 && (
+                    <Badge className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center p-0 bg-farm-orange text-white text-xs">
+                      {cartItems}
+                    </Badge>
+                  )}
+                </Button>
+                <Link to="/cart" className="absolute inset-0" />
+              </div>
 
               {/* Mobile Menu */}
               <Button variant="ghost" size="icon" className="md:hidden">
