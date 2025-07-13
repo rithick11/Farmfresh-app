@@ -2,39 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Farm Fresh Ecommerce Design System */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 45 12% 98%;
+    --foreground: 30 8% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 30 8% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 30 8% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 120 35% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 45 25% 92%;
+    --secondary-foreground: 30 8% 15%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 45 15% 94%;
+    --muted-foreground: 30 8% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 85 30% 85%;
+    --accent-foreground: 30 8% 15%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 45 12% 88%;
+    --input: 45 12% 88%;
+    --ring: 120 35% 45%;
+
+    --success: 120 45% 50%;
+    --warning: 45 85% 55%;
+    
+    /* Farm-specific design tokens */
+    --farm-green: 120 35% 45%;
+    --farm-green-light: 120 25% 85%;
+    --farm-brown: 30 25% 35%;
+    --farm-cream: 45 25% 96%;
+    --farm-orange: 25 85% 60%;
+    
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(120 35% 45%), hsl(85 40% 50%));
+    --gradient-card: linear-gradient(180deg, hsl(var(--background)), hsl(45 15% 96%));
+    
+    /* Shadows */
+    --shadow-card: 0 4px 20px hsl(30 8% 15% / 0.08);
+    --shadow-product: 0 8px 30px hsl(30 8% 15% / 0.12);
+    
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --radius: 0.5rem;
 
