@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ProductGrid } from "@/components/ProductGrid";
@@ -8,13 +9,31 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Search, Filter } from "lucide-react";
 
 const Products = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || "");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortBy, setSortBy] = useState("featured");
 
+  // Update search query when URL params change
+  useEffect(() => {
+    const search = searchParams.get('search');
+    if (search) {
+      setSearchQuery(search);
+    }
+  }, [searchParams]);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      setSearchParams({ search: query });
+    } else {
+      setSearchParams({});
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
-      <Header onSearch={setSearchQuery} searchQuery={searchQuery} />
+      <Header onSearch={handleSearch} searchQuery={searchQuery} />
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-4">Our Products</h1>
@@ -31,7 +50,7 @@ const Products = () => {
               <Input
                 placeholder="Search products..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearch(e.target.value)}
                 className="pl-10"
               />
             </div>

@@ -3,7 +3,7 @@ import { ShoppingCart, Menu, Search, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CartSidebar } from "./CartSidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 
 interface HeaderProps {
@@ -16,11 +16,25 @@ export function Header({ onSearch, searchQuery = "" }: HeaderProps) {
   const [cartItems] = useState(3); // Mock cart items count
   const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLocalSearchQuery(value);
-    onSearch?.(value);
+    
+    // If we're not on the products page, navigate there with search
+    if (location.pathname !== '/products' && value.trim()) {
+      navigate(`/products?search=${encodeURIComponent(value)}`);
+    } else {
+      onSearch?.(value);
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && localSearchQuery.trim()) {
+      navigate(`/products?search=${encodeURIComponent(localSearchQuery)}`);
+    }
   };
 
   const handleLogout = () => {
@@ -57,6 +71,7 @@ export function Header({ onSearch, searchQuery = "" }: HeaderProps) {
                 placeholder="Search products..."
                 value={localSearchQuery}
                 onChange={handleSearchChange}
+                onKeyDown={handleSearchKeyDown}
                 className="bg-transparent border-none outline-none flex-1 text-sm placeholder:text-muted-foreground"
               />
             </div>
