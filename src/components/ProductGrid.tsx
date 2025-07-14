@@ -1,19 +1,28 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Plus, Heart, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import organicTomatoes from "@/assets/products/organic-tomatoes.jpg";
+import freshCarrots from "@/assets/products/fresh-carrots.jpg";
+import farmEggs from "@/assets/products/farm-eggs.jpg";
+import organicBananas from "@/assets/products/organic-bananas.jpg";
+import wholeWheatBread from "@/assets/products/whole-wheat-bread.jpg";
+import freshStrawberries from "@/assets/products/fresh-strawberries.jpg";
+import freshSpinach from "@/assets/products/fresh-spinach.jpg";
+import organicMilk from "@/assets/products/organic-milk.jpg";
+import organicApples from "@/assets/products/organic-apples.jpg";
 
-// Mock product data
+// Product data with real images
 const products = [
   {
     id: 1,
     name: "Organic Tomatoes",
     price: 4.99,
     originalPrice: 6.99,
-    image: "/placeholder.svg",
-    category: "Vegetables",
+    image: organicTomatoes,
+    category: "vegetables",
     rating: 4.8,
     reviews: 124,
     isOrganic: true,
@@ -23,8 +32,8 @@ const products = [
     id: 2,
     name: "Fresh Carrots",
     price: 2.99,
-    image: "/placeholder.svg",
-    category: "Vegetables",
+    image: freshCarrots,
+    category: "vegetables",
     rating: 4.6,
     reviews: 89,
     isOrganic: true,
@@ -34,8 +43,8 @@ const products = [
     id: 3,
     name: "Farm Eggs (12 pack)",
     price: 5.49,
-    image: "/placeholder.svg",
-    category: "Dairy",
+    image: farmEggs,
+    category: "dairy",
     rating: 4.9,
     reviews: 256,
     isOrganic: true,
@@ -46,8 +55,8 @@ const products = [
     name: "Organic Bananas",
     price: 3.29,
     originalPrice: 3.99,
-    image: "/placeholder.svg",
-    category: "Fruits",
+    image: organicBananas,
+    category: "fruits",
     rating: 4.7,
     reviews: 167,
     isOrganic: true,
@@ -57,8 +66,8 @@ const products = [
     id: 5,
     name: "Whole Wheat Bread",
     price: 4.49,
-    image: "/placeholder.svg",
-    category: "Grains",
+    image: wholeWheatBread,
+    category: "grains",
     rating: 4.5,
     reviews: 78,
     isOrganic: true,
@@ -68,18 +77,89 @@ const products = [
     id: 6,
     name: "Fresh Strawberries",
     price: 6.99,
-    image: "/placeholder.svg",
-    category: "Fruits",
+    image: freshStrawberries,
+    category: "fruits",
     rating: 4.8,
     reviews: 203,
+    isOrganic: true,
+    isOnSale: false
+  },
+  {
+    id: 7,
+    name: "Fresh Spinach",
+    price: 3.49,
+    image: freshSpinach,
+    category: "vegetables",
+    rating: 4.7,
+    reviews: 142,
+    isOrganic: true,
+    isOnSale: false
+  },
+  {
+    id: 8,
+    name: "Organic Milk",
+    price: 4.29,
+    originalPrice: 4.99,
+    image: organicMilk,
+    category: "dairy",
+    rating: 4.9,
+    reviews: 315,
+    isOrganic: true,
+    isOnSale: true
+  },
+  {
+    id: 9,
+    name: "Organic Apples",
+    price: 5.99,
+    image: organicApples,
+    category: "fruits",
+    rating: 4.6,
+    reviews: 198,
     isOrganic: true,
     isOnSale: false
   }
 ];
 
-export function ProductGrid() {
+interface ProductGridProps {
+  searchQuery?: string;
+  selectedCategory?: string;
+  sortBy?: string;
+}
+
+export function ProductGrid({ searchQuery = "", selectedCategory = "all", sortBy = "featured" }: ProductGridProps) {
   const [favorites, setFavorites] = useState<number[]>([]);
   const { toast } = useToast();
+
+  // Filter and sort products
+  const filteredProducts = useMemo(() => {
+    let filtered = products.filter(product => {
+      // Search filter
+      const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                           product.category.toLowerCase().includes(searchQuery.toLowerCase());
+      
+      // Category filter
+      const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+      
+      return matchesSearch && matchesCategory;
+    });
+
+    // Sort products
+    switch (sortBy) {
+      case "price-low":
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case "price-high":
+        filtered.sort((a, b) => b.price - a.price);
+        break;
+      case "name":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      default: // featured
+        break;
+    }
+
+    return filtered;
+  }, [searchQuery, selectedCategory, sortBy]);
 
   const toggleFavorite = (productId: number) => {
     setFavorites(prev => 
@@ -109,7 +189,7 @@ export function ProductGrid() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <Card key={product.id} className="group overflow-hidden border-0 shadow-card hover:shadow-product transition-all duration-300">
               <CardContent className="p-0">
                 <div className="relative overflow-hidden">

@@ -1,13 +1,31 @@
 import { useState } from "react";
-import { ShoppingCart, Menu, Search, User } from "lucide-react";
+import { ShoppingCart, Menu, Search, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CartSidebar } from "./CartSidebar";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
-export function Header() {
+interface HeaderProps {
+  onSearch?: (query: string) => void;
+  searchQuery?: string;
+}
+
+export function Header({ onSearch, searchQuery = "" }: HeaderProps) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [cartItems] = useState(3); // Mock cart items count
+  const [localSearchQuery, setLocalSearchQuery] = useState(searchQuery);
+  const { user, logout } = useAuth();
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalSearchQuery(value);
+    onSearch?.(value);
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <>
@@ -37,6 +55,8 @@ export function Header() {
               <input
                 type="text"
                 placeholder="Search products..."
+                value={localSearchQuery}
+                onChange={handleSearchChange}
                 className="bg-transparent border-none outline-none flex-1 text-sm placeholder:text-muted-foreground"
               />
             </div>
@@ -49,9 +69,24 @@ export function Header() {
               </Button>
 
               {/* User Account */}
-              <Button variant="ghost" size="icon">
-                <User className="w-5 h-5" />
-              </Button>
+              {user ? (
+                <div className="flex items-center gap-2">
+                  <Link to="/profile">
+                    <Button variant="ghost" size="icon" className="relative">
+                      <User className="w-5 h-5" />
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" size="icon" onClick={handleLogout}>
+                    <LogOut className="w-4 h-4" />
+                  </Button>
+                </div>
+              ) : (
+                <Link to="/login">
+                  <Button variant="ghost" size="icon">
+                    <User className="w-5 h-5" />
+                  </Button>
+                </Link>
+              )}
 
               {/* Cart */}
               <div className="relative">
