@@ -86,8 +86,10 @@ const Cart = () => {
   const handleCheckout = () => {
     toast({
       title: "Checkout initiated",
-      description: "Redirecting to payment page...",
+      description: "Redirecting to checkout page...",
     });
+    // Navigate to checkout page
+    window.location.href = "/checkout";
   };
 
   if (cartItems.length === 0) {
